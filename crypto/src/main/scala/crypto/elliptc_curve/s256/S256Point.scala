@@ -1,10 +1,19 @@
 package crypto.elliptc_curve.s256
 
-import crypto.elliptc_curve.Point
+import crypto.elliptc_curve.s256.S256Field.P
+import crypto.elliptc_curve.{Point, PointException}
 import crypto.elliptc_curve.s256.S256Point._
 import crypto.elliptc_curve.utils.Numbers._
 import crypto.elliptc_curve.s256.S256Point.BigIntWrapper
+import crypto.elliptc_curve.utils.{Encoders, Hash, Numbers}
 
+import scala.util.Try
+
+/**
+ * This is a Public Key
+ * @param x
+ * @param y
+ */
 case class S256Point(x: S256Field, y: S256Field) extends Point[S256Field, S256Point] {
   val a: S256Field = S256Field(A)
   val b: S256Field = S256Field(B)
@@ -28,6 +37,35 @@ case class S256Point(x: S256Field, y: S256Field) extends Point[S256Field, S256Po
     val v = (signature.r * sInv).mod(N)
     (u * G + v * this).x.num == signature.r
   }
+
+  def sec(compressed: Boolean = true): Array[Byte] = {
+    val xBin = Numbers.toByteWithoutNull(x.num)
+    if (compressed) {
+      if (y.num.mod(2) == 0) {
+        Array(0x02.byteValue()) ++ xBin
+      } else {
+        Array(0x03.byteValue()) ++ xBin
+      }
+    } else {
+      Array(0x04.byteValue()) ++ xBin ++ Numbers.toByteWithoutNull(y.num)
+    }
+  }
+
+  def hash160(compressed: Boolean = true): Array[Byte] = {
+    Hash.hash160(sec(compressed))
+  }
+
+  /**
+   * This method creates a bitcoin address
+   */
+  def address(compressed: Boolean = true, testnet: Boolean = false): String = {
+    val h160 = hash160(compressed)
+    if (testnet) {
+      Encoders.base58Checksum(Array(0x6f.byteValue()) ++ h160)
+    } else {
+      Encoders.base58Checksum(Array(0x00.byteValue()) ++ h160)
+    }
+  }
 }
 
 object S256Point {
@@ -42,6 +80,25 @@ object S256Point {
 
   def apply(x: BigInt, y: BigInt): S256Point = {
     S256Point(S256Field(x), S256Field(y))
+  }
+
+  def parse(secBin: Array[Byte]): Try[S256Point] = Try {
+    if (secBin.length != 65) throw PointException("input key has a wrong length")
+    if (secBin(0) == 0x04.byteValue()) {
+      val x = BigInt(secBin.slice(1, 33))
+      val y = BigInt(secBin.slice(33, 65))
+      S256Point(x, y)
+    } else {
+      val x = S256Field(BigInt(secBin.slice(1, secBin.length)))
+      val alpha = x ** 3 + S256Field(B)
+      val beta = alpha.sqrt
+      (secBin(0) == 2, beta.num.mod(2) == 0) match {
+        case (true, true) => S256Point(x, beta)
+        case (true, false) => S256Point(x, S256Field(P - beta.num))
+        case (false, true) => S256Point(x, S256Field(P - beta.num))
+        case (false, false) => S256Point(x, beta)
+      }
+    }
   }
 
   implicit class IntWrapper(intValue: Int) {

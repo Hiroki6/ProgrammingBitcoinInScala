@@ -8,6 +8,11 @@ import scala.math.BigInt.int2bigInt
 case class S256Field(num: BigInt) extends Field[S256Field] {
   val prime: BigInt = P
   override def create(num: BigInt, prime: BigInt): S256Field = S256Field(num)
+
+  def sqrt = {
+    val v = (P + 1) / 4
+    this ** v
+  }
 }
 
 object S256Field {

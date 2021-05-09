@@ -1,9 +1,10 @@
 package crypto.clliptc_curve.s256
 
-import crypto.elliptc_curve.s256.{S256Point, Signature}
+import crypto.elliptc_curve.s256.{PrivateKey, S256Point, Signature}
 import org.specs2.{mutable, ScalaCheck}
 import crypto.elliptc_curve.utils.Numbers._
-import S256Point.BigIntWrapper
+import S256Point.{BigIntWrapper, G}
+import org.apache.commons.codec.binary.Hex
 
 class S256PointSpec extends mutable.Specification with ScalaCheck {
   "apply" >> {
@@ -70,5 +71,48 @@ class S256PointSpec extends mutable.Specification with ScalaCheck {
       )
       point.verify(z2, signature2) must_== false
     }
+  }
+
+  "sec" >> {
+    val coefficient1 = BigInt(999).pow(3)
+    val uncompressed1 =
+      "049d5ca49670cbe4c3bfa84c96a8c87df086c6ea6a24ba6b809c9de234496808d56fa15cc7f3d38cda98dee2419f415b7513dde1301f8643cd9245aea7f3f911f9"
+    val compressed1 = "039d5ca49670cbe4c3bfa84c96a8c87df086c6ea6a24ba6b809c9de234496808d5"
+    val point1 = coefficient1 * G
+    point1.sec(false) must_== Hex.decodeHex(uncompressed1)
+    point1.sec() must_== Hex.decodeHex(compressed1)
+
+    val coefficient2 = 123
+    val uncompressed2 =
+      "04a598a8030da6d86c6bc7f2f5144ea549d28211ea58faa70ebf4c1e665c1fe9b5204b5d6f84822c307e4b4a7140737aec23fc63b65b35f86a10026dbd2d864e6b"
+    val compressed2 = "03a598a8030da6d86c6bc7f2f5144ea549d28211ea58faa70ebf4c1e665c1fe9b5"
+    val point2 = coefficient2 * G
+    point2.sec(false) must_== Hex.decodeHex(uncompressed2)
+    point2.sec() must_== Hex.decodeHex(compressed2)
+
+    val coefficient3 = 42424242
+    val uncompressed3 =
+      "04aee2e7d843f7430097859e2bc603abcc3274ff8169c1a469fee0f20614066f8e21ec53f40efac47ac1c5211b2123527e0e9b57ede790c4da1e72c91fb7da54a3"
+    val compressed3 = "03aee2e7d843f7430097859e2bc603abcc3274ff8169c1a469fee0f20614066f8e"
+    val point3 = coefficient3 * G
+    point3.sec(false) must_== Hex.decodeHex(uncompressed3)
+    point3.sec(true) must_== Hex.decodeHex(compressed3)
+  }
+
+  "address" >> {
+    val privateKey1 = new PrivateKey(5002)
+    privateKey1
+      .point
+      .address(compressed = false, testnet = true) must_== "mmTPbXQFxboEtNRkwfh6K51jvdtHLxGeMA"
+
+    val privateKey2 = new PrivateKey(BigInt(2020).pow(5))
+    privateKey2
+      .point
+      .address(compressed = true, testnet = true) must_== "mopVkxp8UhXqRYbCYJsbeE1h1fiF64jcoH"
+
+    val privateKey3 = new PrivateKey(toBigInt("12345deadbeef"))
+    privateKey3
+      .point
+      .address(compressed = true, testnet = false) must_== "1F1Pn2y6pDb68E5nYJJeba4TLg2U7B6KF1"
   }
 }
