@@ -12,7 +12,7 @@ trait Field[F <: Field[F]] {
   val prime: BigInt
 
   override def equals(obj: Any): Boolean = obj match {
-    case f: F => num == f.num && prime == f.prime
+    case f: Field[F] => num == f.num && prime == f.prime
     case i: Int => num == i
     case b: BigInt => num == b
     case _ => false
@@ -62,6 +62,12 @@ trait Field[F <: Field[F]] {
 
   def **(exponent: Int): F = {
     val n = exponent % (prime - BigInt(1))
+    val newNum = num.modPow(n, prime)
+    create(newNum, prime)
+  }
+
+  def **(exponent: BigInt): F = {
+    val n = exponent.mod(prime - BigInt(1))
     val newNum = num.modPow(n, prime)
     create(newNum, prime)
   }

@@ -27,7 +27,9 @@ lazy val crypto = project.in(file("crypto"))
       Dependencies.Libraries.catsEffect,
       Dependencies.Libraries.catsEffectTest,
       Dependencies.Libraries.pureConfig,
+      Dependencies.Libraries.bouncyCastle,
       Dependencies.Libraries.specs2Core,
-      Dependencies.Libraries.specs2ScaleCheck
+      Dependencies.Libraries.specs2ScaleCheck,
+      Dependencies.Libraries.commonsCodec
     )
   )
