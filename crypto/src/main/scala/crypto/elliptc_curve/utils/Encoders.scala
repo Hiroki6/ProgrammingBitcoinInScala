@@ -1,5 +1,4 @@
 package crypto.elliptc_curve.utils
-import java.security.MessageDigest
 
 object Encoders {
   private val BASE58_ALPHABET: Array[Char] =
