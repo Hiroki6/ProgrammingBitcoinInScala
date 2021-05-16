@@ -12,6 +12,7 @@ object Dependencies {
     val logbackVersion = "1.2.3"
     val scalaLoggingVersion = "3.9.3"
     val commonsCodecVersion = "1.15"
+    val http4sVersion = "1.0.0-M21"
   }
 
   object Libraries {
@@ -24,5 +25,7 @@ object Dependencies {
     val logback = "ch.qos.logback" % "logback-classic" % logbackVersion
     val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion
     val commonsCodec = "commons-codec" % "commons-codec" % commonsCodecVersion
+    val http4sCore = "org.http4s" %% "http4s-core" % http4sVersion
+    val http4sClient = "org.http4s" %% "http4s-blaze-client" % http4sVersion
   }
 }

@@ -12,7 +12,7 @@ class PrivateKey(secret: BigInt) {
   def hex: String = Numbers.toHex(secret)
 
   def sign(z: BigInt): Signature = {
-    val k = ranGen.nextInt(N.intValue().abs)
+    val k = ranGen.nextInt(N.intValue.abs)
     val r = (k * G).x.num
     val kInv = BigInt(k).modPow(N - 2, N)
     var s = (z + r * secret) * kInv % N

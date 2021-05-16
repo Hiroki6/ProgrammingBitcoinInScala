@@ -23,7 +23,7 @@ case class S256Point(x: S256Field, y: S256Field) extends Point[S256Field, S256Po
 
   override def *(coefficient: Int): S256Point = {
     val coef = coefficient % N
-    super.*(coef.intValue())
+    super.*(coef.intValue)
   }
 
   override def *(coefficient: BigInt): S256Point = {

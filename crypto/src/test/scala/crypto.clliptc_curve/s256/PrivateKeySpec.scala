@@ -9,7 +9,7 @@ import scala.util.Random
 class PrivateKeySpec extends mutable.Specification with ScalaCheck {
 
   "signing" >> {
-    val privKey = new PrivateKey(Random.nextInt(N.intValue().abs))
+    val privKey = new PrivateKey(Random.nextInt(N.intValue.abs))
     val z = Random.nextInt(math.pow(2, 256).toInt)
     val signature = privKey.sign(z)
     privKey.point.verify(z, signature) must_== true
