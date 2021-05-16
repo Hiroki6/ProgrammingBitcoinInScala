@@ -2,26 +2,26 @@ name := "Bitcoin"
 
 version := "0.1"
 
-scalaVersion := Dependencies.Versions.scalaVersion
-
 def commonSettings(projectName: String) = Seq(
   name := projectName,
+  scalaVersion := Dependencies.Versions.scalaVersion,
   scalafmtOnCompile := true,
   scalafmtSbtCheck := true,
-  scalacOptions ++= Seq("-Ypartial-unification"),
   libraryDependencies ++= Seq(
     Dependencies.Libraries.logback,
     Dependencies.Libraries.scalaLogging
   )
 )
 
-lazy val root = project.in(file("."))
+lazy val root = project
+  .in(file("."))
   .aggregate(
     crypto,
     blockchain
   )
 
-lazy val crypto = project.in(file("crypto"))
+lazy val crypto = project
+  .in(file("crypto"))
   .settings(
     commonSettings("crypto"),
     libraryDependencies ++= Seq(
@@ -35,7 +35,8 @@ lazy val crypto = project.in(file("crypto"))
     )
   )
 
-lazy val blockchain = project.in(file("blockchain"))
+lazy val blockchain = project
+  .in(file("blockchain"))
   .settings(
     commonSettings("blockchain"),
     libraryDependencies ++= Seq(
@@ -49,9 +50,11 @@ lazy val blockchain = project.in(file("blockchain"))
       Dependencies.Libraries.http4sCore,
       Dependencies.Libraries.http4sClient
     )
-  ).dependsOn(crypto, concurrentAlgebra)
+  )
+  .dependsOn(crypto, concurrentAlgebra)
 
-lazy val concurrentAlgebra = project.in(file("concurrent_algebra"))
+lazy val concurrentAlgebra = project
+  .in(file("concurrent_algebra"))
   .settings(
     commonSettings("concurrent_algebra"),
     libraryDependencies ++= Seq(

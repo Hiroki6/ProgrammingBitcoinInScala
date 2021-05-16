@@ -31,7 +31,7 @@ case class Transaction(
 }
 
 object Transaction {
-  def parse(serializeData: Array[Byte], testnet: Boolean): IO[Transaction] = IO {
-    throw UnsupportedOperationException
+  def parse(serializeData: Array[Byte], testnet: Boolean): IO[Transaction] = IO.raiseError {
+    new UnsupportedOperationException
   }
 }

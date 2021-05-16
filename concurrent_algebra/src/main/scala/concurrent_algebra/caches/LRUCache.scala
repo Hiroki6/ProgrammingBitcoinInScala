@@ -7,7 +7,6 @@ import com.typesafe.scalalogging.{LazyLogging, Logger}
 import concurrent_algebra.data_structures.{DoubleLinkedList, Node}
 
 import scala.collection.mutable
-import scala.language.higherKinds
 
 sealed trait LRUCache[F[_], K, V] {
 
