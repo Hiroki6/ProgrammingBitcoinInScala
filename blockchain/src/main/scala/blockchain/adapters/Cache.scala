@@ -13,7 +13,7 @@ trait UsesCache[K, V] {
   val cache: Cache[K, V]
 }
 
-trait MixInCacheWithMap[K, V] extends Cache[K, V] {
+trait MixInCacheInMemory[K, V] {
   val cache: Cache[K, V] = new Cache[K, V] {
     val map = mutable.Map.empty[K, V]
     override def get(key: K): IO[Option[V]] = IO(map.get(key))

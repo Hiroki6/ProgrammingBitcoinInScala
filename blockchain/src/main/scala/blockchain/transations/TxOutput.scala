@@ -1,4 +1,5 @@
 package blockchain.transations
+import blockchain.scripts.Script
 import blockchain.utils.Encoders
 import cats.effect.IO
 
@@ -9,9 +10,8 @@ case class TxOutput(amount: Int, scriptPubKey: Script) {
 }
 
 object TxOutput {
-  def parse(input: Array[Byte]): IO[TxOutput] = IO {
+  def parse(input: Array[Byte]): IO[TxOutput] = Script.parse(input).map { scriptPubKey =>
     val amount = Encoders.littleEndianToInt(input.slice(0, 8))
-    val scriptPubKey = Script.parse(input)
     TxOutput(amount, scriptPubKey)
   }
 }
