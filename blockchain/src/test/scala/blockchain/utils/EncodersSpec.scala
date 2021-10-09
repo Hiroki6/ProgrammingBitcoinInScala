@@ -15,9 +15,18 @@ class EncodersSpec extends mutable.Specification {
 
   "intToLittleEndian" >> {
     val n1 = 1
-    val expected1 = Array(0x01, 0x00, 0x00, 0x00).map(_.byteValue())
+    val expected1 =
+      Array(0x01.byteValue(), 0x00.byteValue(), 0x00.byteValue(), 0x00.byteValue())
     val n2 = 10011545
-    val expected2 = Array(0x99, 0xc3, 0x98, 0x00, 0x00, 0x00, 0x00, 0x00).map(_.byteValue())
+    val expected2 = Array(
+      0x99.byteValue(),
+      0xc3.byteValue(),
+      0x98.byteValue(),
+      0x00.byteValue(),
+      0x00.byteValue(),
+      0x00.byteValue(),
+      0x00.byteValue(),
+      0x00.byteValue())
     Encoders.intToLittleEndian(n1, 4) must_== expected1
     Encoders.intToLittleEndian(n2, 8) must_== expected2
   }

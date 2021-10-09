@@ -17,8 +17,8 @@ object Script {
       while (count < length) {
         current = input(1)
         count += 1
-        ???
       }
+      ???
     }
   }
 }

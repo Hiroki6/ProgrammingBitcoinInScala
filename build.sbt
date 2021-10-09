@@ -2,9 +2,12 @@ name := "Bitcoin"
 
 version := "0.1"
 
+scalaVersion := Dependencies.Versions.scalaVersion
+
 def commonSettings(projectName: String) = Seq(
   name := projectName,
   scalaVersion := Dependencies.Versions.scalaVersion,
+  scalacOptions += "-Ywarn-unused:imports",
   scalafmtOnCompile := true,
   scalafmtSbtCheck := true,
   libraryDependencies ++= Seq(
@@ -27,7 +30,6 @@ lazy val crypto = project
     libraryDependencies ++= Seq(
       Dependencies.Libraries.catsEffect,
       Dependencies.Libraries.catsEffectTest,
-      Dependencies.Libraries.pureConfig,
       Dependencies.Libraries.bouncyCastle,
       Dependencies.Libraries.specs2Core,
       Dependencies.Libraries.specs2ScaleCheck,
@@ -42,7 +44,6 @@ lazy val blockchain = project
     libraryDependencies ++= Seq(
       Dependencies.Libraries.catsEffect,
       Dependencies.Libraries.catsEffectTest,
-      Dependencies.Libraries.pureConfig,
       Dependencies.Libraries.bouncyCastle,
       Dependencies.Libraries.specs2Core,
       Dependencies.Libraries.specs2ScaleCheck,
