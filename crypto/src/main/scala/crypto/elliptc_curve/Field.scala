@@ -13,7 +13,7 @@ trait Field[F <: Field[F]] {
 
   // @todo check in Scala3
   override def equals(obj: Any): Boolean = obj match {
-    case f: Field[F] => num == f.num && prime == f.prime
+    case f: Field[_] => num == f.num && prime == f.prime
     case i: Int => num == i
     case b: BigInt => num == b
     case _ => false

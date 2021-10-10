@@ -7,7 +7,6 @@ scalaVersion := Dependencies.Versions.scalaVersion
 def commonSettings(projectName: String) = Seq(
   name := projectName,
   scalaVersion := Dependencies.Versions.scalaVersion,
-  scalacOptions += "-Ywarn-unused:imports",
   scalafmtOnCompile := true,
   scalafmtSbtCheck := true,
   libraryDependencies ++= Seq(
