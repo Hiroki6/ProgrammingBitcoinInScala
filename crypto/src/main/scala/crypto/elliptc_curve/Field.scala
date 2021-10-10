@@ -11,15 +11,12 @@ trait Field[F <: Field[F]] {
   val num: BigInt
   val prime: BigInt
 
-  // @todo check in Scala3
   override def equals(obj: Any): Boolean = obj match {
     case f: Field[_] => num == f.num && prime == f.prime
     case i: Int => num == i
     case b: BigInt => num == b
     case _ => false
   }
-  def !=(num: Int): Boolean = this.num != num
-  def ==(num: Int): Boolean = this.num == num
 
   def create(num: BigInt, prime: BigInt): F
 

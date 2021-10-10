@@ -10,7 +10,8 @@ case class ECPoint(x: ECField, y: ECField, a: ECField, b: ECField)
 
 object ECPoint {
   def apply(x: ECField, y: ECField, a: ECField, b: ECField): ECPoint = {
-    if (x != 0 && y != 0) {
+    // want to use !=
+    if (!x.equals(0) && !y.equals(0)) {
       if ((y ** 2) != ((x ** 3) + (a * x) + b)) {
         throw PointException(s"Points ($x, $y) are not on the same curve")
       }

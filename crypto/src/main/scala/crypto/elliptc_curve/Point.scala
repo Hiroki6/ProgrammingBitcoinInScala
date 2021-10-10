@@ -18,8 +18,9 @@ trait Point[F <: Field[F], P <: Point[F, P]] {
     if (a != other.a || b != other.b) {
       throw PointException(s"Points ($this, $other) are not on the same curve")
     } else {
-      if (x == 0) other
-      else if (other.x == 0) point
+      // want to use ==
+      if (x.equals(0)) other
+      else if (other.x.equals(0)) point
       else if (x == other.x && y != other.y)
         create(this.x.create(0, this.x.prime), this.y.create(0, this.y.prime), a, b)
       else if (x != other.x) {
