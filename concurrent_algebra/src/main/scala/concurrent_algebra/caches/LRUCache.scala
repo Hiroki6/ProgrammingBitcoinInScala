@@ -6,7 +6,7 @@ import cats.syntax.functor._
 import com.typesafe.scalalogging.{LazyLogging, Logger}
 import concurrent_algebra.data_structures.{DoubleLinkedList, Node}
 
-import scala.collection.mutable
+import scala.collection.{immutable, mutable}
 
 sealed trait LRUCache[F[_], K, V] {
 
@@ -46,7 +46,7 @@ object LRUCache extends LazyLogging {
               if (node.value != value) {
                 linkedList.remove(node)
                 val (newNode, _) = linkedList.add(key, value)
-                cache.updated(key, newNode)
+                cache.clone().addOne(key, newNode)
               } else {
                 cache
               }
@@ -56,7 +56,7 @@ object LRUCache extends LazyLogging {
                 logger.info("key is removed from the cache. {}", k)
                 cache.remove(k)
               }
-              cache.updated(key, newNode)
+              cache.clone().addOne(key, newNode)
           }
         }
 
@@ -75,7 +75,7 @@ object LRUCache extends LazyLogging {
           cache.get(key) match {
             case Some(node) =>
               linkedList.remove(node)
-              cache - key
+              cache.to(immutable.Map) -- Set(key)
             case None =>
               logger.debug("key not found: {}", key)
           }
